@@ -1,34 +1,54 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Button, Input } from '../../components';
+import { Button, Input } from '@/components/index';
+import { useForm } from '@/components/forms';
 
-export const AssinaturaNewsletter = () => (
-  <Wrapper>
-    <Container>
-      <div>
-        <h1>
-          Sua casa com as 
-          <br />
-          <strong>
-            melhores <br /> plantas
-          </strong>
-        </h1>
-        <p>
-          Encontre aqui uma vasta seleção de plantas para decorar a sua casa e torná-lo uma pessoa mais feliz no seu dia a dia. Entre com seu e-mail e assine nossa newsletter para saber das novidades da marca.
-        </p>
-      </div>
-      
-      <Form>
-        <FieldGroup>
-          <Input type="email" placeholder='Insira seu E-mail' />
-          <Button>
-            Assinar Newsletter
-          </Button>
-        </FieldGroup>
-      </Form>
-    </Container>
-  </Wrapper>
-);
+export const AssinaturaNewsletter = () => {
+  const initialValues = {
+    email: ''
+  };
+  const { formState, onChange, handleSubmit } = useForm({
+    initialValues,
+    onSubmit: (data) => {
+      console.log('data', data)
+    }
+  });
+  
+  return (
+    <Wrapper>
+      <Container>
+        <div>
+          <h1>
+            Sua casa com as 
+            <br />
+            <strong>
+              melhores <br /> plantas
+            </strong>
+          </h1>
+          <p>
+            Encontre aqui uma vasta seleção de plantas para decorar a sua casa e torná-lo uma pessoa mais feliz no seu dia a dia. Entre com seu e-mail e assine nossa newsletter para saber das novidades da marca.
+          </p>
+        </div>
+        
+        <Form onSubmit={handleSubmit}>
+          <FieldGroup>
+            <Input
+              name="email"
+              type="email"
+              value={formState.email}
+              placeholder='Insira seu E-mail'
+              onChange={onChange}
+              autoComplete="off"
+            />
+            <Button type="submit">
+              Assinar Newsletter
+            </Button>
+          </FieldGroup>
+        </Form>
+      </Container>
+    </Wrapper>
+  );
+}
 
 export const Wrapper = styled.div`
   background-color: #ffe29a;
