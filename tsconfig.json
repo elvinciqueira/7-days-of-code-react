@@ -29,6 +29,8 @@
       "@/pages/*": ["pages/*"],
       "@/theme/*": ["src/theme/*"],
       "@/modules/*": ["src/modules/*"],
+      "@/service/*": ["src/lib/service/*"],
+      "@/store/*": ["src/lib/store/*"],
     }
   },
   "exclude": [

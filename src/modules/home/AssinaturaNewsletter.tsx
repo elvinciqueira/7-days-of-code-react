@@ -2,16 +2,23 @@ import React from 'react';
 import styled from 'styled-components';
 import { Button, Input } from '@/components/index';
 import { useForm } from '@/components/forms';
+import { useSendNewsletter } from './newsletter.store';
+import * as yup from 'yup';
+
+const schema = yup.object().shape({
+  email: yup.string().email('E-mail inválido'),
+});
 
 export const AssinaturaNewsletter = () => {
-  const initialValues = {
-    email: ''
-  };
-  const { formState, onChange, handleSubmit } = useForm({
-    initialValues,
-    onSubmit: (data) => {
-      console.log('data', data)
+  const { mutate: sendNewsletter } = useSendNewsletter({
+    onSuccess: () => { 
+      alert('Assinatura realizada com sucesso!');
     }
+  });
+  const { formState, onChange, handleSubmit } = useForm({
+    initialValues: { email: '' },
+    onSubmit: ({ email }) => sendNewsletter(email),
+    validateSchema: async (values) => schema.validate(values, { abortEarly: false })
   });
   
   return (

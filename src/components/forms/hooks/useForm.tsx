@@ -1,14 +1,42 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 type FormProps = {
   initialValues: {
     [key: string]: any;
   },
   onSubmit: (values: { [key: string]: any }) => void;
+  validateSchema?: (values: { [key: string]: any }) => void;
 }
 
-export const useForm = ({ onSubmit, initialValues }: FormProps) => {
+function formatErrors(yupErrorsInner = []) {
+  return yupErrorsInner?.reduce((errorObjectAcc, currentError) => {
+    const fieldName = currentError.path
+    const errorMessage = currentError.message
+    return {
+      ...errorObjectAcc,
+      [fieldName]: errorMessage,
+    }
+  }, {})
+}
+
+
+export const useForm = ({ onSubmit, initialValues, validateSchema }: FormProps) => {
   const [formState, setFormState] = useState(initialValues);
+  const [errors, setErrors] = useState({});
+  
+  async function validateValues(currentValues: any) {
+    try {
+      if (validateSchema) await validateSchema(currentValues)
+      setErrors({})
+    } catch (err) {
+      const formatedErrors = formatErrors(err.inner)
+      setErrors(formatedErrors)
+    }
+  }
+
+  useEffect(() => {
+    validateValues(formState).catch(console.log)
+  }, [formState]);
   
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => { 
     const { name, value } = event.target;
@@ -27,6 +55,7 @@ export const useForm = ({ onSubmit, initialValues }: FormProps) => {
   return {
     onChange,
     handleSubmit,
-    formState
+    formState,
+    errors,
   }
 };
