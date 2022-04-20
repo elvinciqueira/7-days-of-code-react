@@ -6,7 +6,7 @@ import { useSendNewsletter } from './newsletter.store';
 import * as yup from 'yup';
 
 const schema = yup.object().shape({
-  email: yup.string().email('E-mail inválido'),
+  email: yup.string().email('E-mail Inválido. Exemplo de formato válido: maria@email.com'),
 });
 
 export const AssinaturaNewsletter = () => {
@@ -15,7 +15,7 @@ export const AssinaturaNewsletter = () => {
       alert('Assinatura realizada com sucesso!');
     }
   });
-  const { formState, onChange, handleSubmit } = useForm({
+  const { formState, errors, onChange, handleSubmit } = useForm({
     initialValues: { email: '' },
     onSubmit: ({ email }) => sendNewsletter(email),
     validateSchema: async (values) => schema.validate(values, { abortEarly: false })
@@ -42,6 +42,7 @@ export const AssinaturaNewsletter = () => {
             <Input
               name="email"
               type="email"
+              error={errors?.email}
               value={formState.email}
               placeholder='Insira seu E-mail'
               onChange={onChange}
@@ -137,6 +138,7 @@ export const Form = styled.form`
 export const FieldGroup = styled.div`
   display: flex;
   flex-direction: column;
+  flex: 1;
   
   @media (min-width: 920px) {
     flex-direction: row;
